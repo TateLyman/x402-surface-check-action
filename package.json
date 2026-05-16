@@ -1,0 +1,10 @@
+{
+  "name": "x402-surface-check-action",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Action wrapper for no-payment x402, MPP, and HTTP 402 launch-surface checks.",
+  "scripts": {
+    "test": "npm run check",
+    "check": "node --check scripts/smoke.mjs && node --check test-fixtures/x402-server.mjs && node scripts/smoke.mjs"
+  }
+}

@@ -1,0 +1,103 @@
+name: x402 Surface Check
+description: Run a no-payment x402, MPP, or HTTP 402 launch-surface check in GitHub Actions.
+author: Tate Lyman
+
+branding:
+  icon: credit-card
+  color: green
+
+inputs:
+  target:
+    description: Manifest, OpenAPI spec, x402 resource catalog, pasted JSON URL, or direct paid endpoint URL to check.
+    required: true
+  output:
+    description: Optional file path to write the Markdown or JSON report.
+    required: false
+    default: ""
+  endpoint:
+    description: Set to true when target is one direct paid endpoint instead of a manifest or OpenAPI document.
+    required: false
+    default: "false"
+  method:
+    description: HTTP method for direct endpoint mode.
+    required: false
+    default: "POST"
+  body:
+    description: Optional JSON request body for direct endpoint mode. Do not put secrets here.
+    required: false
+    default: ""
+  origin:
+    description: Optional browser Origin to use for CORS preflight checks.
+    required: false
+    default: ""
+  limit:
+    description: Maximum endpoints to probe from a manifest or OpenAPI document.
+    required: false
+    default: "6"
+  strict-cache:
+    description: Set to true to flag missing Cache-Control on no-payment 402 challenge responses.
+    required: false
+    default: "false"
+  json:
+    description: Set to true to print JSON instead of Markdown.
+    required: false
+    default: "false"
+  version:
+    description: x402-surface-check npm version to run.
+    required: false
+    default: "latest"
+
+runs:
+  using: composite
+  steps:
+    - name: Run x402 Surface Check
+      shell: bash
+      env:
+        X402_TARGET: ${{ inputs.target }}
+        X402_OUTPUT: ${{ inputs.output }}
+        X402_ENDPOINT: ${{ inputs.endpoint }}
+        X402_METHOD: ${{ inputs.method }}
+        X402_BODY: ${{ inputs.body }}
+        X402_ORIGIN: ${{ inputs.origin }}
+        X402_LIMIT: ${{ inputs.limit }}
+        X402_STRICT_CACHE_INPUT: ${{ inputs.strict-cache }}
+        X402_JSON: ${{ inputs.json }}
+        X402_VERSION: ${{ inputs.version }}
+      run: |
+        args=()
+
+        if [[ "$X402_ENDPOINT" == "true" ]]; then
+          args+=("--endpoint" "--method" "$X402_METHOD")
+        fi
+
+        if [[ -n "$X402_BODY" ]]; then
+          args+=("--body" "$X402_BODY")
+        fi
+
+        if [[ -n "$X402_ORIGIN" ]]; then
+          args+=("--origin" "$X402_ORIGIN")
+        fi
+
+        if [[ -n "$X402_LIMIT" ]]; then
+          args+=("--limit" "$X402_LIMIT")
+        fi
+
+        if [[ "$X402_STRICT_CACHE_INPUT" == "true" ]]; then
+          args+=("--strict-cache")
+        fi
+
+        if [[ "$X402_JSON" == "true" ]]; then
+          args+=("--json")
+        fi
+
+        args+=("$X402_TARGET")
+
+        if [[ -n "$X402_OUTPUT" ]]; then
+          mkdir -p "$(dirname "$X402_OUTPUT")"
+          args+=("$X402_OUTPUT")
+          npx --yes "x402-surface-check@$X402_VERSION" "${args[@]}"
+          cat "$X402_OUTPUT"
+          exit 0
+        fi
+
+        npx --yes "x402-surface-check@$X402_VERSION" "${args[@]}"
