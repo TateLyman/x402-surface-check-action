@@ -1,7 +1,5 @@
 # x402 Surface Check Action
 
-[![CI](https://github.com/TateLyman/x402-surface-check-action/actions/workflows/ci.yml/badge.svg)](https://github.com/TateLyman/x402-surface-check-action/actions/workflows/ci.yml)
-
 GitHub Action wrapper for [`x402-surface-check`](https://www.npmjs.com/package/x402-surface-check), a no-payment checker for public x402, MPP, Pay.sh, Cloudflare Worker, AgentCore-style payment, and HTTP `402 Payment Required` launch surfaces.
 
 The action probes manifests, OpenAPI specs, resource catalogs, or direct paid endpoints without sending payment headers, wallet signatures, API keys, or paid calls. It is meant for projects you own or are authorized to review before an agent or wallet can spend real value.
