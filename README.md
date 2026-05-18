@@ -85,6 +85,14 @@ For a private payment-agent launch review, use the scope builder:
 
 https://tateprograms.com/agent-payment-launch-review.html
 
+If this action finds a concrete blocker and you want a private re-check or one small authorized fix, use the fixed-scope sprint page:
+
+https://tateprograms.com/x402-fix-sprint.html
+
+Machine-readable service catalog:
+
+https://tateprograms.com/services.json
+
 Related free tools:
 
 - Surface checker: https://tateprograms.com/x402-surface-check.html
